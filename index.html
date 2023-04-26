@@ -130,7 +130,7 @@
 					buttonText.classList.add('error');
 					buttonElement.disabled = true;
 					return;
-				} else {
+				} 
 					const oldUlHtml = ulElement.innerHTML;
 					listName.innerHTML = `${buttonName.value}`;
 					listText.innerHTML = `${buttonText.value}`;
@@ -142,5 +142,6 @@
 
 					ulElement.innerHTML = oldUlHtml + listElement.outerHTML;
 				}
+		)
 	</script>
 </html>
