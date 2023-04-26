@@ -102,7 +102,6 @@
 				}
 
 		buttonElement.addEventListener('click', () => {
-			for (let i = 0; i < 1; i++) {
 				buttonName.addEventListener(
 					'input',
 					() => (buttonElement.disabled = false)
@@ -143,9 +142,6 @@
 
 					ulElement.innerHTML = oldUlHtml + listElement.outerHTML;
 				}
-
-				return;
-			}
 		})
 	</script>
 </html>
