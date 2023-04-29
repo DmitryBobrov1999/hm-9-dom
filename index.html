@@ -80,7 +80,7 @@
 
 		const buttonTextInput = document.getElementById('textInput');
 
-		const likesElements = document.querySelectorAll('.like-button');
+		const likesCounter = document.querySelectorAll('.likes-counter');
 
 		const people = [
 			{
@@ -88,6 +88,7 @@
 				text: 'Это будет первый комментарий на этой странице',
 				date: '12.02.22 12:18',
 				like: 3,
+				
 			},
 			{
 				name: 'Варвара Н.',
@@ -97,44 +98,52 @@
 			},
 		];
 
+		const initEventListeners = () => {
+			const buttonsElements = document.querySelectorAll('.like-button');
+
+			for (const buttonElement of buttonsElements) {
+				buttonElement.addEventListener('click', () => {
+					if (buttonElement.classList.contains('-active-like')) {
+						buttonElement.classList.remove('-active-like');
+					} else {
+						buttonElement.classList.add('-active-like');
+						
+          
+					}
+					
+				});
+			}
+		};
+		
+
 		const renderPeople = () => {
 			const peopleHTML = people
-				.map(man => {
-					return `<li class="comment">
-	        <div class="comment-header">
-	          <div>${man.name}</div>
-	          <div>${man.date}</div>
-	        </div>
-	        <div class="comment-body">
-	            <div class="comment-text">
-	              ${man.text}
-	            </div>
-	          </div>
-	          <div class="comment-footer">
-	            <div class="likes">
-	              <span id = 'likes-counter' class="likes-counter">${man.like}</span>
-								
-	              <button class="like-button "></button>
-								
-	            </div>
-	          </div>
-	      </li>`;
+				.map((man, index) => {
+					return `<li class="comment" >
+			        <div class="comment-header">
+			          <div>${man.name}</div>
+			          <div>${man.date}</div>
+			        </div>
+			        <div class="comment-body">
+			            <div class="comment-text">
+			              ${man.text}
+			            </div>
+			          </div>
+			          <div class="comment-footer">
+			            <div class="likes">
+			              <span id='likes-counter' class="likes-counter">${man.like}</span>
+
+			              <button data-index='${man.index}' id ='like-button' class="like-button"></button>
+
+			            </div>
+			          </div>
+			      </li>`;
 				})
 				.join('');
 			listElement.innerHTML = peopleHTML;
 
 			initEventListeners();
-		};
-
-		const initEventListeners = () => {
-			const likesElements = document.querySelectorAll('.like-button');
-
-			for (const likeElement of likesElements) {
-				likeElement.addEventListener('click', () => {
-					likeElement.classList.toggle('-active-like');
-					
-				});
-			}
+			
 		};
 
 		renderPeople();
@@ -143,6 +152,10 @@
 			new Date().toLocaleDateString().slice(0, 6) +
 			`${new Date().toLocaleDateString().slice(8)}`
 		}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
+
+		
+			
+		
 
 		buttonNameInput.addEventListener('keyup', enterFunction);
 
@@ -183,19 +196,17 @@
 				return;
 			}
 
-			let defaultLike = 0;
 			people.push({
 				name: buttonNameInput.value,
 				text: buttonTextInput.value,
 				date: realDate,
-				like: defaultLike,
+				like: 0
 			});
 
-			const initEventListeners = () => {
-				const likesElements = document.querySelectorAll('.like-button');
-			};
-
 			renderPeople();
+
+			buttonNameInput.value = '';
+			buttonTextInput.value = '';
 		});
 	</script>
 </html>
