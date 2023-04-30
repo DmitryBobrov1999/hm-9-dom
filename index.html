@@ -80,43 +80,49 @@
 
 		const buttonTextInput = document.getElementById('textInput');
 
-		// const likesCounter = document.querySelectorAll('.likes-counter');
-
 		const people = [
 			{
 				name: 'Глеб Фокин',
 				text: 'Это будет первый комментарий на этой странице',
 				date: '12.02.22 12:18',
 				like: 3,
+				isLike: '',
 			},
 			{
 				name: 'Варвара Н.',
 				text: 'Мне нравится как оформлена эта страница! ❤',
 				date: '13.02.22 19:22',
 				like: 75,
+				isLike: '-active-like',
 			},
 		];
 
 		const initEventListeners = () => {
-			const buttonsElements = document.querySelectorAll('.like-button');
-			let like = true;
+			const buttonsLike = document.querySelectorAll('.like-button');
+			for (const buttonLike of buttonsLike) {
+				buttonLike.addEventListener('click', () => {
+					if (buttonLike.classList.contains('-active-like')) {
+						buttonLike.classList.remove('-active-like');
+					} else {
+						buttonLike.classList.add('-active-like');
+					}
 
-			const likesCounter = document.querySelector('.likes-counter').innerHTML;
-			for (const buttonElement of buttonsElements) {
-				buttonElement.addEventListener('click', () => {
-					for (likeCounter of likesCounter) {
-						likeCounter = like ? ++likeCounter : likeCounter--;
-						like = !like;
-						document.querySelector('.likes-counter').innerHTML = likeCounter;
-						if (buttonElement.classList.contains('-active-like')) {
-							buttonElement.classList.remove('-active-like');
+					const likesCounter = document.querySelectorAll('.likes-counter');
+
+					for (const likeCounter of likesCounter) {
+						count = likeCounter.innerHTML;
+						if (buttonLike.classList.contains('-active-like')) {
+							count++;
+							likeCounter.innerHTML = count;
 						} else {
-							buttonElement.classList.add('-active-like');
-						}
+							count--;
+							likeCounter.innerHTML = count;
+						} 
 					}
 				});
 			}
 		};
+
 
 		const renderPeople = () => {
 			const peopleHTML = people
@@ -135,7 +141,7 @@
 			            <div class="likes">
 			              <span id='likes-counter' class="likes-counter">${man.like}</span>
 
-			              <button data-index='${man.index}' id ='like-button' class="like-button"></button>
+			              <button data-index='${man.index}' id ='like-button' class="like-button ${man.isLike}"></button>
 
 			            </div>
 			          </div>
@@ -145,6 +151,7 @@
 			listElement.innerHTML = peopleHTML;
 
 			initEventListeners();
+			// likeMegaCounter();
 		};
 
 		renderPeople();
@@ -197,7 +204,8 @@
 				name: buttonNameInput.value,
 				text: buttonTextInput.value,
 				date: realDate,
-				like: (likeCounter = 0),
+				like: 0,
+				isLike: '',
 			});
 
 			renderPeople();
