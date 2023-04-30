@@ -80,7 +80,7 @@
 
 		const buttonTextInput = document.getElementById('textInput');
 
-		const likesCounter = document.querySelectorAll('.likes-counter');
+		// const likesCounter = document.querySelectorAll('.likes-counter');
 
 		const people = [
 			{
@@ -88,7 +88,6 @@
 				text: 'Это будет первый комментарий на этой странице',
 				date: '12.02.22 12:18',
 				like: 3,
-				
 			},
 			{
 				name: 'Варвара Н.',
@@ -100,21 +99,24 @@
 
 		const initEventListeners = () => {
 			const buttonsElements = document.querySelectorAll('.like-button');
+			let like = true;
 
+			const likesCounter = document.querySelector('.likes-counter').innerHTML;
 			for (const buttonElement of buttonsElements) {
 				buttonElement.addEventListener('click', () => {
-					if (buttonElement.classList.contains('-active-like')) {
-						buttonElement.classList.remove('-active-like');
-					} else {
-						buttonElement.classList.add('-active-like');
-						
-          
+					for (likeCounter of likesCounter) {
+						likeCounter = like ? ++likeCounter : likeCounter--;
+						like = !like;
+						document.querySelector('.likes-counter').innerHTML = likeCounter;
+						if (buttonElement.classList.contains('-active-like')) {
+							buttonElement.classList.remove('-active-like');
+						} else {
+							buttonElement.classList.add('-active-like');
+						}
 					}
-					
 				});
 			}
 		};
-		
 
 		const renderPeople = () => {
 			const peopleHTML = people
@@ -143,7 +145,6 @@
 			listElement.innerHTML = peopleHTML;
 
 			initEventListeners();
-			
 		};
 
 		renderPeople();
@@ -152,10 +153,6 @@
 			new Date().toLocaleDateString().slice(0, 6) +
 			`${new Date().toLocaleDateString().slice(8)}`
 		}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
-
-		
-			
-		
 
 		buttonNameInput.addEventListener('keyup', enterFunction);
 
@@ -200,7 +197,7 @@
 				name: buttonNameInput.value,
 				text: buttonTextInput.value,
 				date: realDate,
-				like: 0
+				like: (likeCounter = 0),
 			});
 
 			renderPeople();
