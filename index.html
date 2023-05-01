@@ -8,42 +8,7 @@
 
 	<body>
 		<div class="container">
-			<ul id="idComments" class="comments">
-				<!-- <li class="comment">
-					<div class="comment-header">
-						<div>Глеб Фокин</div>
-						<div>12.02.22 12:18</div>
-					</div>
-					<div class="comment-body">
-						<div class="comment-text">
-							Это будет первый комментарий на этой странице
-						</div>
-					</div>
-					<div class="comment-footer">
-						<div class="likes">
-							<span class="likes-counter">3</span>
-							<button class="like-button" data-show = ".like-button"></button>
-						</div>
-					</div>
-				</li>
-				<li id="idComment" class="comment">
-					<div class="comment-header">
-						<div id="idName">Варвара Н.</div>
-						<div id="idDate">13.02.22 19:22</div>
-					</div>
-					<div class="comment-body">
-						<div id="idCommentText" class="comment-text">
-							Мне нравится как оформлена эта страница! ❤
-						</div>
-					</div>
-					<div class="comment-footer">
-						<div class="likes">
-							<span class="likes-counter">75</span>
-							<button class="like-button -active-like" data-show = '.-active-like'></button>
-						</div>
-					</div>
-				</li> -->
-			</ul>
+			<ul id="idComments" class="comments"></ul>
 			<div class="add-form">
 				<input
 					id="nameInput"
@@ -79,53 +44,48 @@
 		const buttonNameInput = document.getElementById('nameInput');
 
 		const buttonTextInput = document.getElementById('textInput');
+		const buttonsLike = document.querySelectorAll('.like-button');
+		const likesCounter = document.querySelectorAll('.likes-counter');
 
-		const people = [
+		const comments = [
 			{
 				name: 'Глеб Фокин',
 				text: 'Это будет первый комментарий на этой странице',
 				date: '12.02.22 12:18',
-				like: 3,
-				isLike: '',
+				countLike: 3,
+				likeComment: 'like-button',
 			},
 			{
 				name: 'Варвара Н.',
 				text: 'Мне нравится как оформлена эта страница! ❤',
 				date: '13.02.22 19:22',
-				like: 75,
-				isLike: '-active-like',
+				countLike: 75,
+				likeComment: '-active-like',
 			},
 		];
 
 		const initEventListeners = () => {
 			const buttonsLike = document.querySelectorAll('.like-button');
 			for (const buttonLike of buttonsLike) {
-				buttonLike.addEventListener('click', () => {
-					if (buttonLike.classList.contains('-active-like')) {
-						buttonLike.classList.remove('-active-like');
+				const index = buttonLike.dataset.index;
+
+				buttonLike.addEventListener('click', event => {
+					
+					if (comments[index].likeComment === '-active-like') {
+						comments[index].countLike -= 1;
+						comments[index].likeComment = '';
 					} else {
-						buttonLike.classList.add('-active-like');
+						comments[index].countLike += 1;
+						comments[index].likeComment = '-active-like';
 					}
 
-					const likesCounter = document.querySelectorAll('.likes-counter');
-
-					for (const likeCounter of likesCounter) {
-						count = likeCounter.innerHTML;
-						if (buttonLike.classList.contains('-active-like')) {
-							count++;
-							likeCounter.innerHTML = count;
-						} else {
-							count--;
-							likeCounter.innerHTML = count;
-						} 
-					}
+					renderPeople();
 				});
 			}
 		};
 
-
 		const renderPeople = () => {
-			const peopleHTML = people
+			const commentsHTML = comments
 				.map((man, index) => {
 					return `<li class="comment" >
 			        <div class="comment-header">
@@ -138,20 +98,19 @@
 			            </div>
 			          </div>
 			          <div class="comment-footer">
-			            <div class="likes">
-			              <span id='likes-counter' class="likes-counter">${man.like}</span>
+			            <div class="likes" >
+			              <span   class="likes-counter">${man.countLike}</span>
 
-			              <button data-index='${man.index}' id ='like-button' class="like-button ${man.isLike}"></button>
+			              <button data-index = '${index}'  class="like-button ${man.likeComment}"></button>
 
 			            </div>
 			          </div>
 			      </li>`;
 				})
 				.join('');
-			listElement.innerHTML = peopleHTML;
+			listElement.innerHTML = commentsHTML;
 
 			initEventListeners();
-			// likeMegaCounter();
 		};
 
 		renderPeople();
@@ -200,12 +159,12 @@
 				return;
 			}
 
-			people.push({
+			comments.push({
 				name: buttonNameInput.value,
 				text: buttonTextInput.value,
 				date: realDate,
-				like: 0,
-				isLike: '',
+				countLike: 0,
+				likeComment: 'like-button',
 			});
 
 			renderPeople();
