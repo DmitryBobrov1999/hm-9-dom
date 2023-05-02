@@ -53,14 +53,14 @@
 				text: 'Это будет первый комментарий на этой странице',
 				date: '12.02.22 12:18',
 				countLike: 3,
-				likeComment: 'like-button',
+				likeComment: false,
 			},
 			{
 				name: 'Варвара Н.',
 				text: 'Мне нравится как оформлена эта страница! ❤',
 				date: '13.02.22 19:22',
 				countLike: 75,
-				likeComment: '-active-like',
+				likeComment: true,
 			},
 		];
 
@@ -70,13 +70,12 @@
 				const index = buttonLike.dataset.index;
 
 				buttonLike.addEventListener('click', event => {
-					
-					if (comments[index].likeComment === '-active-like') {
+					if (comments[index].likeComment === true) {
 						comments[index].countLike -= 1;
-						comments[index].likeComment = '';
+						comments[index].likeComment = false;
 					} else {
 						comments[index].countLike += 1;
-						comments[index].likeComment = '-active-like';
+						comments[index].likeComment = true;
 					}
 
 					renderPeople();
@@ -101,7 +100,9 @@
 			            <div class="likes" >
 			              <span   class="likes-counter">${man.countLike}</span>
 
-			              <button data-index = '${index}'  class="like-button ${man.likeComment}"></button>
+			              <button data-index = '${index}'  class="like-button ${
+						man.likeComment ? '-active-like' : ''
+					}"></button>
 
 			            </div>
 			          </div>
@@ -164,7 +165,7 @@
 				text: buttonTextInput.value,
 				date: realDate,
 				countLike: 0,
-				likeComment: 'like-button',
+				likeComment: false,
 			});
 
 			renderPeople();
