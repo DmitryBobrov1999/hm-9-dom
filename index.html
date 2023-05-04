@@ -8,42 +8,7 @@
 
 	<body>
 		<div class="container">
-			<ul id="idComments" class="comments">
-				<li  class="comment">
-					<div class="comment-header">
-						<div>Глеб Фокин</div>
-						<div>12.02.22 12:18</div>
-					</div>
-					<div class="comment-body">
-						<div class="comment-text">
-							Это будет первый комментарий на этой странице
-						</div>
-					</div>
-					<div class="comment-footer">
-						<div class="likes">
-							<span class="likes-counter">3</span>
-							<button class="like-button"></button>
-						</div>
-					</div>
-				</li>
-				<li id="idComment" class="comment">
-					<div class="comment-header">
-						<div id="idName">Варвара Н.</div>
-						<div id="idDate">13.02.22 19:22</div>
-					</div>
-					<div class="comment-body">
-						<div id="idCommentText" class="comment-text">
-							Мне нравится как оформлена эта страница! ❤
-						</div>
-					</div>
-					<div class="comment-footer">
-						<div class="likes">
-							<span id="idLikes" class="likes-counter">75</span>
-							<button class="like-button -active-like"></button>
-						</div>
-					</div>
-				</li>
-			</ul>
+			<ul id="idComments" class="comments"></ul>
 			<div class="add-form">
 				<input
 					id="nameInput"
@@ -74,74 +39,141 @@
 	<script>
 		const buttonElement = document.getElementById('add-form-button');
 
-		const ulElement = document.getElementById('idComments');
+		const listElement = document.getElementById('idComments');
 
-		const listElement = document.getElementById('idComment');
+		const buttonNameInput = document.getElementById('nameInput');
 
-		const listName = document.getElementById('idName');
+		const buttonTextInput = document.getElementById('textInput');
 
-		const listDate = document.getElementById('idDate');
+		const buttonsLike = document.querySelectorAll('.like-button');
 
-		const listLikes = document.getElementById('idLikes');
+		const likesCounter = document.querySelectorAll('.likes-counter');
 
-		const listText = document.getElementById('idCommentText');
+		const comments = [
+			{
+				name: 'Глеб Фокин',
+				text: 'Это будет первый комментарий на этой странице',
+				date: '12.02.22 12:18',
+				countLike: 3,
+				likeComment: false,
+			},
+			{
+				name: 'Варвара Н.',
+				text: 'Мне нравится как оформлена эта страница! ❤',
+				date: '13.02.22 19:22',
+				countLike: 75,
+				likeComment: true,
+			},
+		];
 
-		const buttonName = document.getElementById('nameInput');
+		const initEventListeners = () => {
+			const buttonsLike = document.querySelectorAll('.like-button');
+			for (const buttonLike of buttonsLike) {
+				const index = buttonLike.dataset.index;
 
-		const buttonText = document.getElementById('textInput');
-
-
-    
-
-    buttonName.addEventListener('keyup', enterFunction);
-
-				function enterFunction(event) {
-					if (event.key === 'Enter') {
-						buttonElement.click()
+				buttonLike.addEventListener('click', event => {
+					if (comments[index].likeComment === true) {
+						comments[index].countLike -= 1;
+						comments[index].likeComment = false;
+					} else {
+						comments[index].countLike += 1;
+						comments[index].likeComment = true;
 					}
-				}
+
+					renderPeople();
+				});
+			}
+		};
+
+		const renderPeople = () => {
+			const commentsHTML = comments
+				.map((man, index) => {
+					return `<li class="comment" >
+			        <div class="comment-header">
+			          <div>${man.name}</div>
+			          <div>${man.date}</div>
+			        </div>
+			        <div class="comment-body">
+			            <div class="comment-text">
+			              ${man.text}
+			            </div>
+			          </div>
+			          <div class="comment-footer">
+			            <div class="likes" >
+			              <span   class="likes-counter">${man.countLike}</span>
+
+			              <button data-index = '${index}'  class="like-button ${
+						man.likeComment ? '-active-like' : ''
+					}"></button>
+
+			            </div>
+			          </div>
+			      </li>`;
+				})
+				.join('');
+			listElement.innerHTML = commentsHTML;
+
+			initEventListeners();
+		};
+
+		renderPeople();
+
+		const realDate = `${
+			new Date().toLocaleDateString().slice(0, 6) +
+			`${new Date().toLocaleDateString().slice(8)}`
+		}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
+
+		buttonNameInput.addEventListener('keyup', enterFunction);
+
+		function enterFunction(event) {
+			if (event.key === 'Enter') {
+				buttonElement.click();
+			}
+		}
 
 		buttonElement.addEventListener('click', () => {
-				buttonName.addEventListener(
-					'input',
-					() => (buttonElement.disabled = false)
-				);
+			buttonNameInput.addEventListener(
+				'input',
+				() => (buttonElement.disabled = false)
+			);
 
-				buttonText.addEventListener(
-					'input',
-					() => (buttonElement.disabled = false)
-				);
+			buttonTextInput.addEventListener(
+				'input',
+				() => (buttonElement.disabled = false)
+			);
 
-				buttonName.classList.remove('error');
-				buttonText.classList.remove('error');
+			buttonNameInput.classList.remove('error');
+			buttonTextInput.classList.remove('error');
 
-				if (buttonName.value === '' && buttonText.value === '') {
-					buttonName.classList.add('error');
-					buttonText.classList.add('error');
-					buttonElement.disabled = true;
-					return;
-				}
-				if (buttonName.value === '') {
-					buttonName.classList.add('error');
-					buttonElement.disabled = true;
-					return;
-				}
-				if (buttonText.value === '') {
-					buttonText.classList.add('error');
-					buttonElement.disabled = true;
-					return;
-				}  
-					const oldUlHtml = ulElement.innerHTML;
-					listName.innerHTML = `${buttonName.value}`;
-					listText.innerHTML = `${buttonText.value}`;
-					listLikes.innerHTML = '0';
-					listDate.innerHTML = `${
-						new Date().toLocaleDateString().slice(0, 6) +
-						`${new Date().toLocaleDateString().slice(8)}`
-					}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
+			if (buttonNameInput.value === '' && buttonTextInput.value === '') {
+				buttonNameInput.classList.add('error');
+				buttonTextInput.classList.add('error');
+				buttonElement.disabled = true;
+				return;
+			}
+			if (buttonNameInput.value === '') {
+				buttonNameInput.classList.add('error');
+				buttonElement.disabled = true;
+				return;
+			}
+			if (buttonTextInput.value === '') {
+				buttonTextInput.classList.add('error');
+				buttonElement.disabled = true;
+				return;
+			}
 
-					ulElement.innerHTML = oldUlHtml + listElement.outerHTML;
-				
+			comments.push({
+				name: buttonNameInput.value,
+				text: buttonTextInput.value,
+				date: realDate,
+				countLike: 0,
+				likeComment: false,
+			});
+
+			renderPeople();
+
+			buttonNameInput.value = '';
+			buttonTextInput.value = '';
 		});
 	</script>
 </html>
