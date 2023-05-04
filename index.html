@@ -46,7 +46,7 @@
 		const buttonTextInput = document.getElementById('textInput');
 
 		const buttonsLike = document.querySelectorAll('.like-button');
-		
+
 		const likesCounter = document.querySelectorAll('.likes-counter');
 
 		const comments = [
@@ -71,7 +71,7 @@
 			for (const buttonLike of buttonsLike) {
 				const index = buttonLike.dataset.index;
 
-				buttonLike.addEventListener('click', event => {
+				buttonLike.addEventListener('click', () => {
 					if (comments[index].likeComment === true) {
 						comments[index].countLike -= 1;
 						comments[index].likeComment = false;
@@ -79,6 +79,20 @@
 						comments[index].countLike += 1;
 						comments[index].likeComment = true;
 					}
+
+					renderPeople();
+				});
+			}
+		};
+
+		const commentAnswer = () => {
+			const commentsSelector = document.querySelectorAll('.comment-text');
+			for (const commentSelector of commentsSelector) {
+				const index = commentSelector.dataset.index;
+				commentSelector.addEventListener('click', () => {
+					buttonTextInput.value = `${comments[index].text}${'\n'}${
+						comments[index].name
+					},`;
 
 					renderPeople();
 				});
@@ -93,8 +107,8 @@
 			          <div>${man.name}</div>
 			          <div>${man.date}</div>
 			        </div>
-			        <div class="comment-body">
-			            <div class="comment-text">
+			        <div  class="comment-body">
+			            <div style = 'word-wrap: break-word' class="comment-text" data-index = '${index}'>
 			              ${man.text}
 			            </div>
 			          </div>
@@ -114,6 +128,7 @@
 			listElement.innerHTML = commentsHTML;
 
 			initEventListeners();
+			commentAnswer();
 		};
 
 		renderPeople();
@@ -163,8 +178,16 @@
 			}
 
 			comments.push({
-				name: buttonNameInput.value,
-				text: buttonTextInput.value,
+				name: buttonNameInput.value
+					.replaceAll('&', '&amp;')
+					.replaceAll('<', '&lt;')
+					.replaceAll('>', '&gt;')
+					.replaceAll('"', '&quot;'),
+				text: buttonTextInput.value
+					.replaceAll('&', '&amp;')
+					.replaceAll('<', '&lt;')
+					.replaceAll('>', '&gt;')
+					.replaceAll('"', '&quot;'),
 				date: realDate,
 				countLike: 0,
 				likeComment: false,
@@ -177,4 +200,3 @@
 		});
 	</script>
 </html>
-
