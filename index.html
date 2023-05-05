@@ -71,7 +71,8 @@
 			for (const buttonLike of buttonsLike) {
 				const index = buttonLike.dataset.index;
 
-				buttonLike.addEventListener('click', () => {
+				buttonLike.addEventListener('click', event => {
+					event.stopPropagation();
 					if (comments[index].likeComment === true) {
 						comments[index].countLike -= 1;
 						comments[index].likeComment = false;
@@ -86,14 +87,15 @@
 		};
 
 		const commentAnswer = () => {
-			const commentsSelector = document.querySelectorAll('.comment-text');
-			for (const commentSelector of commentsSelector) {
-				const index = commentSelector.dataset.index;
-				commentSelector.addEventListener('click', () => {
+			const commentsLi = document.querySelectorAll('.comment');
+			for (const commentLi of commentsLi) {
+				
+				const index = commentLi.dataset.index;
+				commentLi.addEventListener('click', () => {
 					buttonTextInput.value = `${comments[index].text}${'\n'}${
 						comments[index].name
 					},`;
-
+					
 					renderPeople();
 				});
 			}
@@ -102,13 +104,13 @@
 		const renderPeople = () => {
 			const commentsHTML = comments
 				.map((man, index) => {
-					return `<li class="comment" >
+					return `<li class="comment" data-index = '${index}'>
 			        <div class="comment-header">
 			          <div>${man.name}</div>
 			          <div>${man.date}</div>
 			        </div>
 			        <div  class="comment-body">
-			            <div style = 'word-wrap: break-word' class="comment-text" data-index = '${index}'>
+			            <div style = 'word-wrap: break-word' class="comment-text">
 			              ${man.text}
 			            </div>
 			          </div>
