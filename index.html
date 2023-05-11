@@ -49,62 +49,34 @@
 
 		const likesCounter = document.querySelectorAll('.likes-counter');
 
-		const comments = [
-			{
-				name: 'Глеб Фокин',
-				text: 'Это будет первый комментарий на этой странице',
-				date: '12.02.22 12:18',
-				countLike: 3,
-				likeComment: false,
-			},
-			{
-				name: 'Варвара Н.',
-				text: 'Мне нравится как оформлена эта страница! ❤',
-				date: '13.02.22 19:22',
-				countLike: 75,
-				likeComment: true,
-			},
-		];
+		let allComments = [];
 
-		const initEventListeners = () => {
-			const buttonsLike = document.querySelectorAll('.like-button');
-			for (const buttonLike of buttonsLike) {
-				const index = buttonLike.dataset.index;
-
-				buttonLike.addEventListener('click', event => {
-					event.stopPropagation();
-					if (comments[index].likeComment === true) {
-						comments[index].countLike -= 1;
-						comments[index].likeComment = false;
-					} else {
-						comments[index].countLike += 1;
-						comments[index].likeComment = true;
-					}
-
-					renderPeople();
+		fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
+			method: 'GET',
+		}).then(response => {
+			response.json().then(responseData => {
+				const appComments = responseData.comments.map(man => {
+					return {
+						name: man.author.name,
+						date: `${
+							new Date(man.date).toLocaleDateString().slice(0, 6) +
+							`${new Date(man.date).toLocaleDateString().slice(8)}`
+						}  ${new Date(man.date).toLocaleTimeString().slice(0, -3)}`,
+						text: man.text,
+						countLike: man.likes,
+						likeComment: false,
+					};
 				});
-			}
-		};
+				allComments = appComments;
 
-		const commentAnswer = () => {
-			const commentsLi = document.querySelectorAll('.comment');
-			for (const commentLi of commentsLi) {
-				
-				const index = commentLi.dataset.index;
-				commentLi.addEventListener('click', () => {
-					buttonTextInput.value = `${comments[index].text}${'\n'}${
-						comments[index].name
-					},`;
-					
-					renderPeople();
-				});
-			}
-		};
+				renderPeople();
+			});
+		});
 
 		const renderPeople = () => {
-			const commentsHTML = comments
+			const commentsHTML = allComments
 				.map((man, index) => {
-					return `<li class="comment" data-index = '${index}'>
+					return `<li style class="comment" data-index = '${index}'>
 			        <div class="comment-header">
 			          <div>${man.name}</div>
 			          <div>${man.date}</div>
@@ -131,6 +103,40 @@
 
 			initEventListeners();
 			commentAnswer();
+		};
+
+		const initEventListeners = () => {
+			const buttonsLike = document.querySelectorAll('.like-button');
+			for (const buttonLike of buttonsLike) {
+				const index = buttonLike.dataset.index;
+
+				buttonLike.addEventListener('click', event => {
+					event.stopPropagation();
+					if (allComments[index].likeComment === true) {
+						allComments[index].countLike -= 1;
+						allComments[index].likeComment = false;
+					} else {
+						allComments[index].countLike += 1;
+						allComments[index].likeComment = true;
+					}
+
+					renderPeople();
+				});
+			}
+		};
+
+		const commentAnswer = () => {
+			const commentsLi = document.querySelectorAll('.comment');
+			for (const commentLi of commentsLi) {
+				const index = commentLi.dataset.index;
+				commentLi.addEventListener('click', () => {
+					buttonTextInput.value = `${allComments[index].text}${'\n'}${
+						allComments[index].name
+					},`;
+
+					renderPeople();
+				});
+			}
 		};
 
 		renderPeople();
@@ -179,20 +185,50 @@
 				return;
 			}
 
-			comments.push({
-				name: buttonNameInput.value
-					.replaceAll('&', '&amp;')
-					.replaceAll('<', '&lt;')
-					.replaceAll('>', '&gt;')
-					.replaceAll('"', '&quot;'),
-				text: buttonTextInput.value
-					.replaceAll('&', '&amp;')
-					.replaceAll('<', '&lt;')
-					.replaceAll('>', '&gt;')
-					.replaceAll('"', '&quot;'),
-				date: realDate,
-				countLike: 0,
-				likeComment: false,
+			fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
+				method: 'POST',
+				body: JSON.stringify({
+					name: buttonNameInput.value
+						.replaceAll('&', '&amp;')
+						.replaceAll('<', '&lt;')
+						.replaceAll('>', '&gt;')
+						.replaceAll('"', '&quot;'),
+					text: buttonTextInput.value
+						.replaceAll('&', '&amp;')
+						.replaceAll('<', '&lt;')
+						.replaceAll('>', '&gt;')
+						.replaceAll('"', '&quot;'),
+					date: realDate,
+					countLike: 0,
+					likeComment: false,
+				}),
+			}).then(response => {
+				response.json().then(responseData => {
+					allComments = responseData.comments;
+					renderPeople();
+				});
+			});
+
+			fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
+				method: 'GET',
+			}).then(response => {
+				response.json().then(responseData => {
+					const appComments = responseData.comments.map(man => {
+						return {
+							name: man.author.name,
+							date: `${
+								new Date(man.date).toLocaleDateString().slice(0, 6) +
+								`${new Date(man.date).toLocaleDateString().slice(8)}`
+							}  ${new Date(man.date).toLocaleTimeString().slice(0, -3)}`,
+							text: man.text,
+							countLike: man.likes,
+							likeComment: false,
+						};
+					});
+					allComments = appComments;
+
+					renderPeople();
+				});
 			});
 
 			renderPeople();
