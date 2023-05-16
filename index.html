@@ -49,32 +49,40 @@
 
 		const likesCounter = document.querySelectorAll('.likes-counter');
 
+		const commentsLi = document.querySelectorAll('.comment');
+
+		const addForm = document.querySelector('.add-form');
+
+
 		let allComments = [];
 
-	const getComments =	(() => {
-		fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
-			method: 'GET',
-		}).then(response => {
-			response.json().then(responseData => {
-				const appComments = responseData.comments.map(man => {
-					return {
-						name: man.author.name,
-						date: `${
-							new Date(man.date).toLocaleDateString().slice(0, 6) +
-							`${new Date(man.date).toLocaleDateString().slice(8)}`
-						}  ${new Date(man.date).toLocaleTimeString().slice(0, -3)}`,
-						text: man.text,
-						countLike: man.likes,
-						likeComment: false,
-					};
+		const getComments = () => {
+			return fetch(
+				'https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments',
+				{
+					method: 'GET',
+				}
+			)
+				.then(response => {
+					return response.json();
+				})
+				.then(responseData => {
+					allComments = responseData.comments.map(man => {
+						return {
+							name: man.author.name,
+							date: `${
+								new Date(man.date).toLocaleDateString().slice(0, 6) +
+								`${new Date(man.date).toLocaleDateString().slice(8)}`
+							}  ${new Date(man.date).toLocaleTimeString().slice(0, -3)}`,
+							text: man.text,
+							countLike: man.likes,
+							likeComment: false,
+						};
+					});
+					renderPeople();
 				});
-				allComments = appComments;
+		};
 
-				renderPeople();
-			});
-		});
-	})
-	getComments();
 		const renderPeople = () => {
 			const commentsHTML = allComments
 				.map((man, index) => {
@@ -128,7 +136,6 @@
 		};
 
 		const commentAnswer = () => {
-			const commentsLi = document.querySelectorAll('.comment');
 			for (const commentLi of commentsLi) {
 				const index = commentLi.dataset.index;
 				commentLi.addEventListener('click', () => {
@@ -140,7 +147,7 @@
 				});
 			}
 		};
-
+		getComments();
 		renderPeople();
 
 		const realDate = `${
@@ -187,7 +194,11 @@
 				return;
 			}
 
-		const sendComment = fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
+			
+
+			addForm.style.display = 'none';
+
+			fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
 				method: 'POST',
 				body: JSON.stringify({
 					name: buttonNameInput.value
@@ -204,13 +215,17 @@
 					countLike: 0,
 					likeComment: false,
 				}),
-			});
-
-			sendComment.then(response => {
-				getComments();
-				renderPeople();
-			});
-
+			})
+				.then(response => {
+					return response.json();
+				})
+				.then(() => {
+					return getComments();
+				})
+				.then(() => {
+					addForm.style.display = 'flex';
+					
+				});
 
 			renderPeople();
 
