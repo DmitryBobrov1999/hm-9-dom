@@ -5,11 +5,10 @@
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="styles.css" />
 	</head>
-
 	<body>
 		<div class="container">
 			<ul id="idComments" class="comments"></ul>
-			<div class="add-comment">Комментарий добавляется...</div>
+			<!-- <div class="add-comment">Комментарий добавляется...</div> -->
 			<div class="add-form">
 				<input
 					id="nameInput"
@@ -30,13 +29,13 @@
 			</div>
 		</div>
 	</body>
-
 	<style>
 		.error {
 			background-color: rgb(221, 157, 157);
 		}
-	</style>
 
+		
+	</style>
 	<script>
 		const buttonElement = document.getElementById('add-form-button');
 
@@ -109,11 +108,9 @@
 			          <div class="comment-footer">
 			            <div class="likes" >
 			              <span   class="likes-counter">${man.countLike}</span>
-
-			              <button data-index = '${index}'  class="like-button  ${
+										<button data-index = '${index}'  class="like-button  ${
 						man.likeComment ? '-active-like ' : ''
-					} -loading-like" ></button>
-
+					} ${man.isLikeLoading ? '-loading-like' : ''}" ></button>
 			            </div>
 			          </div>
 			      </li>`;
@@ -125,7 +122,6 @@
 			initEventListeners();
 			commentAnswer();
 		};
-
 		const initEventListeners = () => {
 			const buttonsLike = document.querySelectorAll('.like-button');
 			for (const buttonLike of buttonsLike) {
@@ -140,20 +136,19 @@
 							}, interval);
 						});
 					}
-
+					allComments[index].isLikeLoading = true;
 					delay(1000).then(() => {
 						allComments[index].countLike = allComments[index].likeComment
 							? allComments[index].countLike - 1
 							: allComments[index].countLike + 1;
 						allComments[index].likeComment = !allComments[index].likeComment;
-
+						allComments[index].isLikeLoading = false;
 						renderPeople();
 					});
 					renderPeople();
 				});
 			}
 		};
-
 		const commentAnswer = () => {
 			for (const commentLi of commentsLi) {
 				const index = commentLi.dataset.index;
@@ -161,42 +156,35 @@
 					buttonTextInput.value = `${allComments[index].text}${'\n'}${
 						allComments[index].name
 					},`;
-
 					renderPeople();
 				});
 			}
 		};
-		addComment.style.display = 'none';
+		// addComment.remove()
+
 		getComments();
-		renderPeople();
 
 		const realDate = `${
 			new Date().toLocaleDateString().slice(0, 6) +
 			`${new Date().toLocaleDateString().slice(8)}`
 		}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
-
 		buttonNameInput.addEventListener('keyup', enterFunction);
-
 		function enterFunction(event) {
 			if (event.key === 'Enter') {
 				buttonElement.click();
 			}
 		}
-
 		buttonElement.addEventListener('click', () => {
 			buttonNameInput.addEventListener(
 				'input',
 				() => (buttonElement.disabled = false)
 			);
-
 			buttonTextInput.addEventListener(
 				'input',
 				() => (buttonElement.disabled = false)
 			);
-
 			buttonNameInput.classList.remove('error');
 			buttonTextInput.classList.remove('error');
-
 			if (buttonNameInput.value === '' && buttonTextInput.value === '') {
 				buttonNameInput.classList.add('error');
 				buttonTextInput.classList.add('error');
@@ -213,10 +201,16 @@
 				buttonElement.disabled = true;
 				return;
 			}
+			
+			let addDiv = document.createElement('div')
 
-			addForm.style.display = 'none';
+			addDiv.textContent = 'Комментарий добавляется...'
 
-			addComment.style.display = 'flex';
+			container.appendChild(addDiv)
+
+			addForm.classList.remove('add-form')
+			
+			addForm.innerHTML = ''
 
 			fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
 				method: 'POST',
@@ -243,12 +237,27 @@
 					return getComments();
 				})
 				.then(() => {
-					addForm.style.display = 'flex';
-					addComment.style.display = 'none';
+					container.removeChild(addDiv)
+					addForm.classList.add('add-form')
+					addForm.innerHTML = `<input
+					id="nameInput"
+					type="text"
+					class="add-form-name"
+					placeholder="Введите ваше имя"
+				/>
+				<textarea
+					id="textInput"
+					type="textarea"
+					class="add-form-text"
+					placeholder="Введите ваш комментарий"
+					rows="4"
+				></textarea>
+				<div class="add-form-row">
+					<button id="add-form-button" class="add-form-button">Написать</button>
+				</div>`
 				});
 
 			renderPeople();
-
 			buttonNameInput.value = '';
 			buttonTextInput.value = '';
 		});

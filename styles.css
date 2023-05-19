@@ -97,7 +97,7 @@ body {
   }
 
   .-loading-like {
-    animation: rotating 1s linear ;
+    animation: rotating 1s linear infinite;
   }
 
 .like-button {
