@@ -1,28 +1,20 @@
-import { getComments, postComment } from "./api.js";
+import { getComments, postComment, allComments } from './api.js';
+
+import renderPeople from './renderAllComments.js';
 
 const buttonElement = document.getElementById('add-form-button');
-
-const listElement = document.getElementById('idComments');
 
 const buttonNameInput = document.getElementById('nameInput');
 
 const buttonTextInput = document.getElementById('textInput');
 
-const buttonsLike = document.querySelectorAll('.like-button');
-
-const likesCounter = document.querySelectorAll('.likes-counter');
-
-const commentsLi = document.querySelectorAll('.comment');
-
-const addForm = document.querySelector('.add-form');
-
 const addComment = document.querySelector('.add-comment');
 
-const isLikeLoading = document.querySelector('.-loading-like');
+const listElement = document.getElementById('idComments');
 
-
-getComments();
-
+getComments().then(() => {
+	renderPeople();
+});
 
 buttonNameInput.addEventListener('keyup', enterFunction);
 function enterFunction(event) {
@@ -62,5 +54,4 @@ buttonElement.addEventListener('click', () => {
 	}
 
 	postComment();
-	
 });

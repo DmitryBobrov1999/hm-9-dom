@@ -1,6 +1,22 @@
+import { allComments } from './api.js';
 
+import { getListCommentsEdit } from './getComments.js';
+
+const listElement = document.getElementById('idComments');
 
 const commentsLi = document.querySelectorAll('.comment');
+
+const renderPeople = () => {
+	const commentsHTML = allComments
+
+		.map((man, index) => getListCommentsEdit(man, index))
+		.join('');
+
+	listElement.innerHTML = commentsHTML;
+
+	initEventListeners();
+	commentAnswer();
+};
 
 const initEventListeners = () => {
 	const buttonsLike = document.querySelectorAll('.like-button');
@@ -23,9 +39,9 @@ const initEventListeners = () => {
 					: allComments[index].countLike + 1;
 				allComments[index].likeComment = !allComments[index].likeComment;
 				allComments[index].isLikeLoading = false;
-				renderPeople(element, getListComments);
+				renderPeople();
 			});
-			renderPeople(element, getListComments);
+			renderPeople();
 		});
 	}
 };
@@ -37,22 +53,10 @@ const commentAnswer = () => {
 			buttonTextInput.value = `${allComments[index].text}${'\n'}${
 				allComments[index].name
 			},`;
-			renderPeople(element, getListComments);
+			renderPeople();
 		});
 	}
 };
 
-const renderPeople = (element, getListComments) => {
-	
-	const commentsHTML = allComments
-
-		.map((man, index) => getListComments(man, index))
-		.join('');
-
-	element.innerHTML = commentsHTML;
-
-	initEventListeners();
-	commentAnswer();
-};
-
 export default renderPeople;
+export { getListCommentsEdit };

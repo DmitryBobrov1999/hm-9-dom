@@ -1,15 +1,16 @@
-import renderPeople from './renderAllComments.js'
-import { getListCommentsEdit } from './listComments.js';
+import renderPeople from './renderAllComments.js';
 
-
-const listElement = document.getElementById('idComments');
 const addForm = document.querySelector('.add-form');
+
 const addComment = document.querySelector('.add-comment');
+
 const buttonNameInput = document.getElementById('nameInput');
+
 const buttonTextInput = document.getElementById('textInput');
 
+let allComments = [];
+
 const getComments = () => {
-	
 	return fetch(
 		'https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments',
 		{
@@ -20,7 +21,6 @@ const getComments = () => {
 			return response.json();
 		})
 		.then(responseData => {
-			let allComments = [];
 			allComments = responseData.comments.map(man => {
 				return {
 					name: man.author.name,
@@ -34,10 +34,9 @@ const getComments = () => {
 					forceError: true,
 				};
 			});
-			renderPeople(listElement, getListCommentsEdit);
+			renderPeople();
 		});
 };
-
 
 function postComment() {
 	addForm.style.display = 'none';
@@ -91,11 +90,11 @@ function postComment() {
 		});
 }
 
-
 const realDate = `${
 	new Date().toLocaleDateString().slice(0, 6) +
 	`${new Date().toLocaleDateString().slice(8)}`
 }  ${new Date().toLocaleTimeString().slice(0, -3)}`;
 
-
-export { getComments, postComment };
+export { getComments };
+export { postComment };
+export { allComments };

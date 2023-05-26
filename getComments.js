@@ -1,5 +1,3 @@
-
-
 const getListCommentsEdit = (man, index) => {
 	return `<li  class="comment" data-index = '${index}'>
 
