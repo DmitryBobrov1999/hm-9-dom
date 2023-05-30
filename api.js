@@ -1,4 +1,4 @@
-import renderPeople from './renderAllComments.js';
+import renderApp from './renderAllComments.js';
 
 const addForm = document.querySelector('.add-form');
 
@@ -10,14 +10,22 @@ const buttonTextInput = document.getElementById('textInput');
 
 let allComments = [];
 
+const host = 'https://webdev-hw-api.vercel.app/api/v2/dmitry-bobrov/comments';
+
+let token =
+	'Bearer b4c4bocwcodg5g6c5g5g6g5g5k5o5s5w606g3803cg3c03d43cw3c03c43k37o3co3b83cw3co3bc';
+
 const getComments = () => {
-	return fetch(
-		'https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments',
-		{
-			method: 'GET',
-		}
-	)
+	return fetch(host, {
+		method: 'GET',
+		headers: {
+			Authorization: token,
+		},
+	})
 		.then(response => {
+			if (response.status === 401) {
+				throw new Error('Нет авторизации');
+			}
 			return response.json();
 		})
 		.then(responseData => {
@@ -34,15 +42,18 @@ const getComments = () => {
 					forceError: true,
 				};
 			});
-			renderPeople();
+			renderApp();
 		});
 };
 
 function postComment() {
 	addForm.style.display = 'none';
 	addComment.style.display = 'block';
-	fetch('https://webdev-hw-api.vercel.app/api/v1/dmitry-bobrov/comments', {
+	fetch(host, {
 		method: 'POST',
+		headers: {
+			Authorization: token,
+		},
 		body: JSON.stringify({
 			name: buttonNameInput.value
 				.replaceAll('&', '&amp;')
@@ -57,7 +68,7 @@ function postComment() {
 			date: realDate,
 			countLike: 0,
 			likeComment: false,
-			forceError: true,
+			forceError: false,
 		}),
 	})
 		.then(response => {
@@ -98,3 +109,4 @@ const realDate = `${
 export { getComments };
 export { postComment };
 export { allComments };
+export { token}
