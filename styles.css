@@ -134,21 +134,27 @@ body {
 
 .add-form-nameLogin {
 	width: auto;
+	margin-top: 12px;
 }
 
 .add-form-text {
 	margin-top: 12px;
 	padding: 22px;
-	/* resize: none; */
+	resize: none;
 }
 
 .add-form-textLogin {
-	height: auto;
+	height: 20px;
 	margin-top: 12px;
-	padding: 22px;
+	padding: 11px 22px;
 }
 
 .add-form-row {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.add-form-rowLogin {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
@@ -162,7 +168,6 @@ body {
 	border: none;
 	border-radius: 18px;
 	cursor: pointer;
-	width: 556px;
 }
 
 .add-form-button-signUp {
@@ -175,8 +180,6 @@ body {
 	border-radius: 18px;
 	cursor: pointer;
 	text-decoration: underline;
-	
-	
 }
 .add-form-button-signUp:hover {
 	opacity: 0.9;

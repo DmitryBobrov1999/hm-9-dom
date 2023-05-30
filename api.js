@@ -1,21 +1,13 @@
 import renderApp from './renderAllComments.js';
 
-const addForm = document.querySelector('.add-form');
-
-const addComment = document.querySelector('.add-comment');
-
-const buttonNameInput = document.getElementById('nameInput');
-
-const buttonTextInput = document.getElementById('textInput');
-
 let allComments = [];
 
 const host = 'https://webdev-hw-api.vercel.app/api/v2/dmitry-bobrov/comments';
 
-let token =
-	'Bearer b4c4bocwcodg5g6c5g5g6g5g5k5o5s5w606g3803cg3c03d43cw3c03c43k37o3co3b83cw3co3bc';
+let token = 'Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k';
 
-const getComments = () => {
+token = null;
+ function getComments() {
 	return fetch(host, {
 		method: 'GET',
 		headers: {
@@ -44,16 +36,23 @@ const getComments = () => {
 			});
 			renderApp();
 		});
-};
+}
 
 function postComment() {
+	const addForm = document.querySelector('.add-form');
+	const addComment = document.querySelector('.add-comment');
+	const buttonNameInput = document.getElementById('nameInput');
+	const buttonTextInput = document.getElementById('textInput');
 	addForm.style.display = 'none';
 	addComment.style.display = 'block';
-	fetch(host, {
+
+	const realDate = `${
+		new Date().toLocaleDateString().slice(0, 6) +
+		`${new Date().toLocaleDateString().slice(8)}`
+	}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
+
+return fetch(host, {
 		method: 'POST',
-		headers: {
-			Authorization: token,
-		},
 		body: JSON.stringify({
 			name: buttonNameInput.value
 				.replaceAll('&', '&amp;')
@@ -70,6 +69,9 @@ function postComment() {
 			likeComment: false,
 			forceError: false,
 		}),
+		headers: {
+			Authorization: token,
+		},
 	})
 		.then(response => {
 			if (response.status === 400) {
@@ -101,12 +103,37 @@ function postComment() {
 		});
 }
 
-const realDate = `${
-	new Date().toLocaleDateString().slice(0, 6) +
-	`${new Date().toLocaleDateString().slice(8)}`
-}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
+export function loginUser({ login, password }) {
+	return fetch('https://wedev-api.sky.pro/api/user/login', {
+		method: 'POST',
+		body: JSON.stringify({
+			login,
+			password,
+		}),
+	}).then(response => {
+		if (response.status === 400) {
+			throw new Error('Неверный логин или пароль');
+		}
+		return response.json();
+	});
+}
 
-export { getComments };
-export { postComment };
-export { allComments };
-export { token}
+export function registerUser({ login, password, name }) {
+	return fetch('https://wedev-api.sky.pro/api/user', {
+		method: 'POST',
+		body: JSON.stringify({
+			login,
+			password,
+			name,
+		}),
+	}).then(response => {
+		if (response.status === 400) {
+			throw new Error('Такой пользователь уже существует');
+		}
+		return response.json();
+	});
+}
+
+
+
+export { allComments, token, postComment, getComments };
