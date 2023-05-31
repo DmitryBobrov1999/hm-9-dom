@@ -1,4 +1,4 @@
-import { allComments, getComments, postComment, token } from './api.js';
+import { allComments, getComments, postComment } from './api.js';
 
 import { getListCommentsEdit } from './getComments.js';
 
@@ -7,6 +7,10 @@ import { renderLoginComponent } from './components/login-component.js';
 const commentsLi = document.querySelectorAll('.comment');
 
 const buttonTextInput = document.getElementById('textInput');
+
+let token = 'Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k';
+token = null;
+
 
 const renderApp = () => {
 	const appEl = document.getElementById('app');
@@ -22,10 +26,13 @@ const renderApp = () => {
 		return;
 	}
 
+
 	const commentsHTML = allComments
 
 		.map((man, index) => getListCommentsEdit(man, index))
 		.join('');
+
+		
 
 	const appHTML = `<div class="container">
 			<ul id="idComments" class="comments">${commentsHTML}</ul>
@@ -36,13 +43,16 @@ const renderApp = () => {
 					id="nameInput"
 					type="text"
 					class="add-form-name"
+					value=""
 					placeholder="Введите ваше имя"
+					disabled
 				/>
 				<textarea
 					id="textInput"
 					type="textarea"
 					class="add-form-text"
 					placeholder="Введите ваш комментарий"
+					
 					rows="4"
 				></textarea>
 				<div class="add-form-row">
@@ -146,3 +156,4 @@ const commentAnswer = () => {
 
 export default renderApp;
 export { getListCommentsEdit };
+export { token };

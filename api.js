@@ -1,13 +1,12 @@
 import renderApp from './renderAllComments.js';
 
+import { token } from './renderAllComments.js';
+
 let allComments = [];
 
 const host = 'https://webdev-hw-api.vercel.app/api/v2/dmitry-bobrov/comments';
 
-let token = 'Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k';
-
-token = null;
- function getComments() {
+function getComments() {
 	return fetch(host, {
 		method: 'GET',
 		headers: {
@@ -51,7 +50,7 @@ function postComment() {
 		`${new Date().toLocaleDateString().slice(8)}`
 	}  ${new Date().toLocaleTimeString().slice(0, -3)}`;
 
-return fetch(host, {
+	return fetch(host, {
 		method: 'POST',
 		body: JSON.stringify({
 			name: buttonNameInput.value
@@ -134,6 +133,4 @@ export function registerUser({ login, password, name }) {
 	});
 }
 
-
-
-export { allComments, token, postComment, getComments };
+export { allComments, postComment, getComments };

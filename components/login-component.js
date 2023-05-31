@@ -92,7 +92,7 @@ export function renderLoginComponent({ appEl, setToken, getComments }) {
 					name: name,
 				})
 					.then(user => {
-						setToken(`Bearer ${user.user.token}`);
+						setToken(`Bearer ${user.user.token}`);			
 						getComments();
 					})
 					.catch(error => {
