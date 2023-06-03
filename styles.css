@@ -143,6 +143,21 @@ body {
 	resize: none;
 }
 
+.authDiv {
+	margin-top: 24px;
+	font-size: 17px;
+}
+
+.auth-button {
+	font-size: 17px;
+	text-decoration: underline;
+	background: none;
+	border: 0;
+	color: white;
+	
+	
+}
+
 .signUp-button {
 	background: none;
 	padding: 0;

@@ -1,6 +1,11 @@
 import { loginUser, registerUser } from '../api.js';
 
-export function renderLoginComponent({ appEl, setToken, getComments }) {
+export function renderLoginComponent({
+	appEl,
+	setToken,
+	setUser,
+	getComments,
+}) {
 	let isLoginMode = true;
 
 	const renderForm = () => {
@@ -63,7 +68,9 @@ export function renderLoginComponent({ appEl, setToken, getComments }) {
 					password: password,
 				})
 					.then(user => {
-						setToken(`Bearer ${user.user.token}`);
+						localStorage.setItem('setToken', `Bearer ${user.user.token}`);
+
+						localStorage.setItem('setUser', user.user.name);
 						getComments();
 					})
 					.catch(error => {
@@ -92,7 +99,8 @@ export function renderLoginComponent({ appEl, setToken, getComments }) {
 					name: name,
 				})
 					.then(user => {
-						setToken(`Bearer ${user.user.token}`);			
+						setToken(`Bearer ${user.user.token}`);
+						setUser(user.user.name);
 						getComments();
 					})
 					.catch(error => {

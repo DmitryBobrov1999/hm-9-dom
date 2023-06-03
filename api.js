@@ -33,6 +33,7 @@ function getComments() {
 					forceError: true,
 				};
 			});
+
 			renderApp();
 		});
 }

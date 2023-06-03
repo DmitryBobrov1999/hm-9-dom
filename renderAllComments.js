@@ -8,42 +8,71 @@ const commentsLi = document.querySelectorAll('.comment');
 
 const buttonTextInput = document.getElementById('textInput');
 
-let token = 'Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k';
-token = null;
-
+let token = null;
+let name = '';
 
 const renderApp = () => {
-	const appEl = document.getElementById('app');
-	if (!token) {
-		renderLoginComponent({
-			appEl,
-			setToken: newToken => {
-				token = newToken;
-			},
-			getComments,
-		});
+	const tokenFromStorage = localStorage.getItem('setToken');
+	const nameFromStorage = localStorage.getItem('setUser');
 
-		return;
+	if (tokenFromStorage) {
+		token = tokenFromStorage;
+	}
+	if (nameFromStorage) {
+		name = nameFromStorage;
 	}
 
+	if (token === null) {
+		const appEl = document.getElementById('app');
 
-	const commentsHTML = allComments
+		const commentsHTML = allComments
 
-		.map((man, index) => getListCommentsEdit(man, index))
-		.join('');
+			.map((man, index) => getListCommentsEdit(man, index))
+			.join('');
 
-		
-
-	const appHTML = `<div class="container">
+		const appHTML = `<div class="container">
 			<ul id="idComments" class="comments">${commentsHTML}</ul>
 			<div class="add-comment">Комментарий добавляется...</div>
+			<div class = 'authDiv'>
+			Чтобы добавить комментарий,<button id = "auth-button" class = 'auth-button'>авторизуйтесь</button>
+			</div>
+		</div>`;
 
+		appEl.innerHTML = appHTML;
+
+		const addComment = document.querySelector('.add-comment');
+
+		addComment.style.display = 'none';
+
+		document.getElementById('auth-button').addEventListener('click', () => {
+			renderLoginComponent({
+				appEl,
+
+				getComments,
+			});
+		});
+
+		initEventListeners();
+		commentAnswer();
+	}
+
+	if (token !== null) {
+		const appEl = document.getElementById('app');
+
+		const commentsHTML = allComments
+
+			.map((man, index) => getListCommentsEdit(man, index))
+			.join('');
+
+		const appHTML = `<div class="container">
+			<ul id="idComments" class="comments">${commentsHTML}</ul>
+			<div class="add-comment">Комментарий добавляется...</div>
 			<div class="add-form">
 				<input
 					id="nameInput"
 					type="text"
 					class="add-form-name"
-					value=""
+					value="${name}"
 					placeholder="Введите ваше имя"
 					disabled
 				/>
@@ -61,57 +90,58 @@ const renderApp = () => {
 			</div>
 		</div>`;
 
-	appEl.innerHTML = appHTML;
+		appEl.innerHTML = appHTML;
 
-	const addComment = document.querySelector('.add-comment');
+		const addComment = document.querySelector('.add-comment');
 
-	addComment.style.display = 'none';
+		addComment.style.display = 'none';
 
-	const buttonNameInput = document.getElementById('nameInput');
+		const buttonNameInput = document.getElementById('nameInput');
 
-	const buttonTextInput = document.getElementById('textInput');
+		const buttonTextInput = document.getElementById('textInput');
 
-	const buttonElement = document.getElementById('add-form-button');
+		const buttonElement = document.getElementById('add-form-button');
 
-	buttonNameInput.addEventListener('keyup', event => {
-		if (event.key === 'Enter') {
-			buttonElement.click();
-		}
-	});
+		buttonNameInput.addEventListener('keyup', event => {
+			if (event.key === 'Enter') {
+				buttonElement.click();
+			}
+		});
 
-	buttonElement.addEventListener('click', () => {
-		buttonNameInput.addEventListener(
-			'input',
-			() => (buttonElement.disabled = false)
-		);
-		buttonTextInput.addEventListener(
-			'input',
-			() => (buttonElement.disabled = false)
-		);
-		buttonNameInput.classList.remove('error');
-		buttonTextInput.classList.remove('error');
-		if (buttonNameInput.value === '' && buttonTextInput.value === '') {
-			buttonNameInput.classList.add('error');
-			buttonTextInput.classList.add('error');
-			buttonElement.disabled = true;
-			return;
-		}
-		if (buttonNameInput.value === '') {
-			buttonNameInput.classList.add('error');
-			buttonElement.disabled = true;
-			return;
-		}
-		if (buttonTextInput.value === '') {
-			buttonTextInput.classList.add('error');
-			buttonElement.disabled = true;
-			return;
-		}
+		buttonElement.addEventListener('click', () => {
+			buttonNameInput.addEventListener(
+				'input',
+				() => (buttonElement.disabled = false)
+			);
+			buttonTextInput.addEventListener(
+				'input',
+				() => (buttonElement.disabled = false)
+			);
+			buttonNameInput.classList.remove('error');
+			buttonTextInput.classList.remove('error');
+			if (buttonNameInput.value === '' && buttonTextInput.value === '') {
+				buttonNameInput.classList.add('error');
+				buttonTextInput.classList.add('error');
+				buttonElement.disabled = true;
+				return;
+			}
+			if (buttonNameInput.value === '') {
+				buttonNameInput.classList.add('error');
+				buttonElement.disabled = true;
+				return;
+			}
+			if (buttonTextInput.value === '') {
+				buttonTextInput.classList.add('error');
+				buttonElement.disabled = true;
+				return;
+			}
 
-		postComment();
-	});
+			postComment();
+		});
 
-	initEventListeners();
-	commentAnswer();
+		initEventListeners();
+		commentAnswer();
+	}
 };
 
 const initEventListeners = () => {
