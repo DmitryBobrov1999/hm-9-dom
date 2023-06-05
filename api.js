@@ -2,6 +2,8 @@ import renderApp from './renderAllComments.js';
 
 import { token } from './renderAllComments.js';
 
+import { format } from 'date-fns';
+
 let allComments = [];
 
 const host = 'https://webdev-hw-api.vercel.app/api/v2/dmitry-bobrov/comments';
@@ -21,14 +23,12 @@ function getComments() {
 		})
 		.then(responseData => {
 			allComments = responseData.comments.map(man => {
-				const date = new Date(man.date);
-				date.setHours(date.getHours() - 3);
+				let trueDate = new Date(man.date);
+				trueDate.setHours(trueDate.getHours() - 3);
+				const createDate = format(trueDate, 'dd.MM.yy HH:mm:ss');
 				return {
 					name: man.author.name,
-					date: `${
-						date.toLocaleDateString().slice(0, 6) +
-						`${date.toLocaleDateString().slice(8)}`
-					}  ${date.toLocaleTimeString().slice(0, -3)}`,
+					date: createDate,
 					text: man.text,
 					countLike: man.likes,
 					likeComment: man.isLiked,
@@ -151,14 +151,12 @@ export function numberOfLikes({ token, id, countLike, likeComment }) {
 				likeComment,
 			},
 		}
-	)
-		.then(response => {
-			if (response.status === 401) {
-				throw new Error('Нет авторизации');
-			}
-			return response.json();
-		})
-		
+	).then(response => {
+		if (response.status === 401) {
+			throw new Error('Нет авторизации');
+		}
+		return response.json();
+	});
 }
 
 export { allComments, postComment, getComments };

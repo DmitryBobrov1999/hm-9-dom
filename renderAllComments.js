@@ -4,11 +4,47 @@ import { getListCommentsEdit } from './getComments.js';
 
 import { renderLoginComponent } from './components/login-component.js';
 
-const commentsLi = document.querySelectorAll('.comment');
 
-const buttonTextInput = document.getElementById('textInput');
 
-let token = null;
+
+
+const initEventListeners = () => {
+	const buttonsLike = document.querySelectorAll('.like-button');
+	for (const buttonLike of buttonsLike) {
+		const index = buttonLike.dataset.index;
+		const id = buttonLike.dataset.id;
+
+		buttonLike.addEventListener('click', event => {
+			event.stopPropagation();
+			allComments[index].isLikeLoading = true;
+			numberOfLikes({ token, id }).then(() => {
+				allComments[index].countLike = allComments[index].likeComment
+					? allComments[index].countLike - 1
+					: allComments[index].countLike + 1;
+				allComments[index].likeComment = !allComments[index].likeComment;
+				allComments[index].isLikeLoading = false;
+				renderApp();
+			});
+			renderApp();
+		});
+	}
+};
+
+const commentAnswer = () => {
+	const commentsLi = document.querySelectorAll('.comment');
+	const buttonTextInput = document.getElementById('textInput');
+	for (const commentLi of commentsLi) {
+		const index = commentLi.dataset.index;
+		commentLi.addEventListener('click', () => {
+			buttonTextInput.value = `${allComments[index].text}${'\n'}${
+				allComments[index].name
+			},`;
+			renderApp();
+		});
+	}
+};
+
+let token = localStorage.getItem('setToken');
 let name = '';
 
 const renderApp = () => {
@@ -21,9 +57,8 @@ const renderApp = () => {
 	if (nameFromStorage) {
 		name = nameFromStorage;
 	}
-	
 
-	if (token === null) {
+	if (!token) {
 		const appEl = document.getElementById('app');
 
 		const commentsHTML = allComments
@@ -48,12 +83,15 @@ const renderApp = () => {
 		document.getElementById('auth-button').addEventListener('click', () => {
 			renderLoginComponent({
 				appEl,
+				setToken: newToken => {
+					token = newToken;
+				},
 
 				getComments,
 			});
 		});
 
-		// initEventListeners();
+		initEventListeners();
 		commentAnswer();
 	}
 
@@ -142,45 +180,11 @@ const renderApp = () => {
 
 		initEventListeners();
 		commentAnswer();
+		
 	}
 };
 
-const initEventListeners = () => {
-	const buttonsLike = document.querySelectorAll('.like-button');
-	for (const buttonLike of buttonsLike) {
-		const index = buttonLike.dataset.index;
-		const id = buttonLike.dataset.id;
-		
-		
-			
-		
-		buttonLike.addEventListener('click', event => {
-			event.stopPropagation();
-			allComments[index].isLikeLoading = true;
-			numberOfLikes({ token, id }).then(() => {
-				allComments[index].countLike = allComments[index].likeComment
-					? allComments[index].countLike - 1
-					: allComments[index].countLike + 1;
-				allComments[index].likeComment = !allComments[index].likeComment;
-				allComments[index].isLikeLoading = false;
-				 renderApp();
-			});
-			renderApp();
-		});
-	}
-};
 
-const commentAnswer = () => {
-	for (const commentLi of commentsLi) {
-		const index = commentLi.dataset.index;
-		commentLi.addEventListener('click', () => {
-			buttonTextInput.value = `${allComments[index].text}${'\n'}${
-				allComments[index].name
-			},`;
-			renderApp();
-		});
-	}
-};
 
 export default renderApp;
 export { getListCommentsEdit };
