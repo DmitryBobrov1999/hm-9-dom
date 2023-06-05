@@ -15,7 +15,7 @@ const getListCommentsEdit = (man, index) => {
 			          <div class="comment-footer">
 			            <div class="likes" >
 			              <span   class="likes-counter">${man.countLike}</span>
-										<button data-index = '${index}'  class="like-button  ${
+										<button data-index = '${index}' data-id = '${man.id}'   class="like-button  ${
 		man.likeComment ? '-active-like ' : ''
 	} ${man.isLikeLoading ? '-loading-like' : ''}" ></button>
 			            </div>
