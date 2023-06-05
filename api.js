@@ -21,15 +21,18 @@ function getComments() {
 		})
 		.then(responseData => {
 			allComments = responseData.comments.map(man => {
+				const date = new Date(man.date);
+				date.setHours(date.getHours() - 3);
 				return {
 					name: man.author.name,
 					date: `${
-						new Date(man.date).toLocaleDateString().slice(0, 6) +
-						`${new Date(man.date).toLocaleDateString().slice(8)}`
-					}  ${new Date(man.date).toLocaleTimeString().slice(0, -3)}`,
+						date.toLocaleDateString().slice(0, 6) +
+						`${date.toLocaleDateString().slice(8)}`
+					}  ${date.toLocaleTimeString().slice(0, -3)}`,
 					text: man.text,
 					countLike: man.likes,
-					likeComment: false,
+					likeComment: man.isLiked,
+					id: man.id,
 					forceError: true,
 				};
 			});
@@ -68,6 +71,7 @@ function postComment() {
 			countLike: 0,
 			likeComment: false,
 			forceError: false,
+			id: man.id,
 		}),
 		headers: {
 			Authorization: token,
@@ -132,6 +136,29 @@ export function registerUser({ login, password, name }) {
 		}
 		return response.json();
 	});
+}
+
+export function numberOfLikes({ token, id, countLike, likeComment }) {
+	return fetch(
+		`https://webdev-hw-api.vercel.app/api/v2/dmitry-bobrov/comments/${id}/toggle-like`,
+		{
+			headers: {
+				Authorization: token,
+			},
+			method: 'POST',
+			body: {
+				countLike,
+				likeComment,
+			},
+		}
+	)
+		.then(response => {
+			if (response.status === 401) {
+				throw new Error('Нет авторизации');
+			}
+			return response.json();
+		})
+		
 }
 
 export { allComments, postComment, getComments };

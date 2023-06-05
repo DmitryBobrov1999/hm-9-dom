@@ -69,7 +69,6 @@ export function renderLoginComponent({
 				})
 					.then(user => {
 						localStorage.setItem('setToken', `Bearer ${user.user.token}`);
-
 						localStorage.setItem('setUser', user.user.name);
 						getComments();
 					})
@@ -99,8 +98,9 @@ export function renderLoginComponent({
 					name: name,
 				})
 					.then(user => {
-						setToken(`Bearer ${user.user.token}`);
-						setUser(user.user.name);
+						localStorage.setItem('setToken', `Bearer ${user.user.token}`);
+
+						localStorage.setItem('setUser', user.user.name);
 						getComments();
 					})
 					.catch(error => {

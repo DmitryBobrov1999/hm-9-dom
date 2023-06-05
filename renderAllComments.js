@@ -1,4 +1,4 @@
-import { allComments, getComments, postComment } from './api.js';
+import { allComments, getComments, postComment, numberOfLikes } from './api.js';
 
 import { getListCommentsEdit } from './getComments.js';
 
@@ -21,6 +21,7 @@ const renderApp = () => {
 	if (nameFromStorage) {
 		name = nameFromStorage;
 	}
+	
 
 	if (token === null) {
 		const appEl = document.getElementById('app');
@@ -52,7 +53,7 @@ const renderApp = () => {
 			});
 		});
 
-		initEventListeners();
+		// initEventListeners();
 		commentAnswer();
 	}
 
@@ -148,24 +149,21 @@ const initEventListeners = () => {
 	const buttonsLike = document.querySelectorAll('.like-button');
 	for (const buttonLike of buttonsLike) {
 		const index = buttonLike.dataset.index;
-
+		const id = buttonLike.dataset.id;
+		
+		
+			
+		
 		buttonLike.addEventListener('click', event => {
 			event.stopPropagation();
-			function delay(interval = 300) {
-				return new Promise(resolve => {
-					setTimeout(() => {
-						resolve();
-					}, interval);
-				});
-			}
 			allComments[index].isLikeLoading = true;
-			delay(1000).then(() => {
+			numberOfLikes({ token, id }).then(() => {
 				allComments[index].countLike = allComments[index].likeComment
 					? allComments[index].countLike - 1
 					: allComments[index].countLike + 1;
 				allComments[index].likeComment = !allComments[index].likeComment;
 				allComments[index].isLikeLoading = false;
-				renderApp();
+				 renderApp();
 			});
 			renderApp();
 		});
