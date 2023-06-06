@@ -4,10 +4,6 @@ import { getListCommentsEdit } from './getComments.js';
 
 import { renderLoginComponent } from './components/login-component.js';
 
-
-
-
-
 const initEventListeners = () => {
 	const buttonsLike = document.querySelectorAll('.like-button');
 	for (const buttonLike of buttonsLike) {
@@ -39,7 +35,6 @@ const commentAnswer = () => {
 			buttonTextInput.value = `${allComments[index].text}${'\n'}${
 				allComments[index].name
 			},`;
-			renderApp();
 		});
 	}
 };
@@ -95,7 +90,7 @@ const renderApp = () => {
 		commentAnswer();
 	}
 
-	if (token !== null) {
+	if (token) {
 		const appEl = document.getElementById('app');
 
 		const commentsHTML = allComments
@@ -141,11 +136,13 @@ const renderApp = () => {
 
 		const buttonElement = document.getElementById('add-form-button');
 
-		buttonNameInput.addEventListener('keyup', event => {
+		document.addEventListener('keyup', enterFunction);
+
+		function enterFunction(event) {
 			if (event.key === 'Enter') {
 				buttonElement.click();
 			}
-		});
+		}
 
 		buttonElement.addEventListener('click', () => {
 			buttonNameInput.addEventListener(
@@ -180,11 +177,8 @@ const renderApp = () => {
 
 		initEventListeners();
 		commentAnswer();
-		
 	}
 };
-
-
 
 export default renderApp;
 export { getListCommentsEdit };

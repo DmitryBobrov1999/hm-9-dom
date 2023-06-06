@@ -5,7 +5,6 @@ import _ from 'lodash';
 export function renderLoginComponent({
 	appEl,
 	setToken,
-	setUser,
 	getComments,
 }) {
 	let isLoginMode = true;

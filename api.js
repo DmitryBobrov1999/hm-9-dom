@@ -71,7 +71,6 @@ function postComment() {
 			countLike: 0,
 			likeComment: false,
 			forceError: false,
-			id: man.id,
 		}),
 		headers: {
 			Authorization: token,
