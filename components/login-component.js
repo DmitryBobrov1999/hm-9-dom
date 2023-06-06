@@ -1,9 +1,10 @@
 import { loginUser, registerUser } from '../api.js';
 
+import _ from 'lodash';
+
 export function renderLoginComponent({
 	appEl,
 	setToken,
-	setUser,
 	getComments,
 }) {
 	let isLoginMode = true;
@@ -68,6 +69,7 @@ export function renderLoginComponent({
 					password: password,
 				})
 					.then(user => {
+						setToken(`Bearer ${user.user.token}`);
 						localStorage.setItem('setToken', `Bearer ${user.user.token}`);
 						localStorage.setItem('setUser', user.user.name);
 						getComments();
@@ -95,11 +97,11 @@ export function renderLoginComponent({
 				registerUser({
 					login: login,
 					password: password,
-					name: name,
+					name: _.capitalize(name),
 				})
 					.then(user => {
+						setToken(`Bearer ${user.user.token}`);
 						localStorage.setItem('setToken', `Bearer ${user.user.token}`);
-
 						localStorage.setItem('setUser', user.user.name);
 						getComments();
 					})
