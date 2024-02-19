@@ -30,3 +30,5 @@ ____
 ## Стек:
 
 * Javascript
+* CSS
+* HTML
