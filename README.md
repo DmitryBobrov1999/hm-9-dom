@@ -6,7 +6,7 @@ ____
 
 ## Ссылка на приложение:
 
-https://dmitrybobrov1999.github.io/cardgame/
+https://dmitrybobrov1999.github.io/skypro_comments
 
 ____
 
